@@ -1,16 +1,11 @@
-# Barry's Personal Protforlio Website 
+# Autoregressive Graph Generation with GraphRNN and Adversarial Attack on Graph Classification Task with Latent Perturbation
+## 2022-2023 DSC180: UCSD Data Science Senior Capstone Project
 
-This is my GitHub Pages repository, and this contians all the code I use to construct my personal protforlio website!!
+### This is the GitHub Pages repository for group A11 in DSC180. 
 
-## What is here on my site?
-1. Intoduction of myself!
-2. My notable projects
-3. Past experiences
-4. (COMING) Random stuff I find interesting
+Professor: Gal Mishine 
 
-> Note: This website is constantly being improved and new stuff can be added at anytime! 
-
-------
-## For my senior capstone project...
-
-I will be putting my college senior capstone project website as a individual section on my page. Link: https://Barry0121.github.io/graph-adversarial-attack. 
+Group Members: 
+* Winston Yu
+* Jianming Geng
+* Barry Xue
