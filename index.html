@@ -34,28 +34,122 @@
 						<section id="one">
 							<div class="inner">
 								<header class="major">
-									<h1>Graph Adversarial Attack with Latent Perturbation</h1>
-									<h2>UC San Diego Data Science Senior Capstone Project</h2>
+									<h1>Investigation of Adversarial Attack on GNN</h1>
+									<h3>Attack Graph Classification Perturbation in Latent Representation of Graphs </h3>
 									<h4>Winston Yu, Jianming Geng, Barry Xue</h4>
 									<h4>UCSD Halıcıoğlu Data Science Institute</h4>
+									<h5>UC San Diego Data Science Senior Capstone Project</h5>
 								</header>
-								<span class="image main"><img src="images/pic11.jpg" alt="" /></span>
-								<h5>Background on the UC San Diego Data Science Senior Capstone: </h5>
-								<p></p>
+								<div class="image section">
+									<!-- Thinking about switching this to another image -->
+									<span class="image main"><a href="https://cs.stanford.edu/people/jure/pubs/graphrnn-icml18.pdf" traget="_blank"><img src="images/GraphRNN_Result_Official.png" alt="GraphRNN Results" /></a></span>
+									<p>Figure 1: From "GraphRNN: Generating Realistic Graphs with Deep Auto-regressive Models"; Comparison between original graph (top row), generation from GraphRNN, a deep auto-regressive graph generation model (second row), and random generation baseline (bottom row). </p>
+								</div>
 							</div>
 						</section>
 
 						<section id="two">
 							<div class="inner">
-								<header class="style4">
-									<h4>section 1</h4>
+								<header class="major">
+									<h3>Motivation</h3>
 								</header>
-								<span class="image main"><img src="images/pic11.jpg" alt="" /></span>
-								<h5>Background on the UC San Diego Data Science Senior Capstone: </h5>
-								<p>Here are some text in paragraph mode</p>
+								<h5>1. Generating Attack with Surrogate Model</h5>
+								<div class="image section">
+									<span class="image main"><a href="https://arxiv.org/abs/2111.02842" target="_blank"><img src="images/overall_grabnel.png" alt="" /></a></span>
+									<p>Figure 2: From "Adversarial Attacks on Graph Classification via Bayesian Optimisation"; a visualization of the attack generation procedure.</p>
+								</div>
+								<p>[Write Here]</p>
+								<h5>2. Generating Adversarial Example with WGAN</h5>
+								<div class="image section">
+									<span class="image main"><a href="https://arxiv.org/pdf/1710.11342.pdf" target="_blank"><img src="images/Natural_Adversarial_Example.png" alt="" /></a></span>
+									<p>Figure 3: From "Generating Natural Adversarial Example"; A visualization of the Wasserstein GAN procedure. </p>
+								</div>
+								<p>[Write Here]</p>
 							</div>
 						</section>
 
+
+						<section id="three">
+							<div class="inner">
+								<header class="major">
+									<h4>Our Proposal</h4>
+								</header>
+								<p>[Write Here]</p>
+
+								<header class="style4">
+									<h4>Generator: GraphRNN</h4>
+									<div class="image section">
+										<span class="image main"><a href="https://cs.stanford.edu/people/jure/pubs/graphrnn-icml18.pdf" target="_blank"><img src="images/GraphRNN_Structure.png" alt="" /></a></span>
+										<p>Figure 4: Structure of the GraphRNN model. </p>
+									</div>
+									<p>[Write Here]</p>
+								</header>
+
+								<header class="style4">
+									<h4>Inverter&Discriminator: Multi-layer Neural Network</h4>
+									<p>[Write Here]</p>
+								</header>
+
+								<header class="style4">
+									<h4>Overall Structure</h4>
+									<div class="image section">
+										<span class="image main"><a href="" target="_blank"><img src="images/pic11.jpg" alt="" /></a></span>
+										<p>Figure 5: Structure of our attack generation procedure. </p>
+									</div>
+									<p>[Write Here]</p>
+								</header>
+							</div>
+						</section>
+
+						<section id="four">
+							<div class="inner">
+								<header class="major">
+									<h4>Result of our Investigation</h4>
+								</header>
+								<h5>1. New Training Process for GraphRNN.</h5>
+								<!-- <div class="image section">
+									<span class="image main"><a href="https://arxiv.org/abs/2111.02842" target="_blank"><img src="images/overall_grabnel.png" alt="" /></a></span>
+									<p>Figure 2: From "Adversarial Attacks on Graph Classification via Bayesian Optimisation"; a visualization of the attack generation procedure.</p>
+								</div> -->
+								<p>[Write Here]</p>
+								<h5>2. Observation on the three Losses.</h5>
+								<!-- <div class="image section">
+									<span class="image main"><a href="https://arxiv.org/pdf/1710.11342.pdf" target="_blank"><img src="images/pic11.jpg" alt="" /></a></span>
+									<p>Figure 3: From "Generating Natural Adversarial Example"; A visualization of the Wasserstein GAN procedure. </p>
+								</div> -->
+								<p>[Write Here]</p>
+							</div>
+						</section>
+
+						<section id="five">
+							<div class="inner">
+								<header class="major">
+									<h4>Challenges and Future Directions</h4>
+								</header>
+								<h5>1. GraphRNN output is inconsistent.</h5>
+								<!-- <div class="image section">
+									<span class="image main"><a href="https://arxiv.org/abs/2111.02842" target="_blank"><img src="images/overall_grabnel.png" alt="" /></a></span>
+									<p>Figure 2: From "Adversarial Attacks on Graph Classification via Bayesian Optimisation"; a visualization of the attack generation procedure.</p>
+								</div> -->
+								<p>[Write Here]</p>
+								<h5>2. Lack of networkx integration in PyTorch/PyTorch Geometric.</h5>
+								<!-- <div class="image section">
+									<span class="image main"><a href="https://arxiv.org/pdf/1710.11342.pdf" target="_blank"><img src="images/pic11.jpg" alt="" /></a></span>
+									<p>Figure 3: From "Generating Natural Adversarial Example"; A visualization of the Wasserstein GAN procedure. </p>
+								</div> -->
+								<p>[Write Here]</p>
+							</div>
+						</section>
+
+						<section id="six">
+							<div class="inner">
+								<header class="major">
+									<h4>Reference</h4>
+								</header>
+
+								<p>[Write Here]</p>
+							</div>
+						</section>
 					</div>
 
 				<!-- Contact -->

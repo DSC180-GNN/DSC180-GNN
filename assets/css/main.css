@@ -2165,6 +2165,10 @@ input, select, textarea {
 		display: inline-block;
 		position: relative;
 	}
+		.image.section {
+			font-size:80%;
+			text-align: center;
+		}
 
 		.image img {
 			display: block;
