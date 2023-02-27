@@ -20,9 +20,6 @@
 				<!-- Header -->
 					<header id="header">
 						<a href="index.html" class="logo"><strong>DSC</strong> <span>180</span></a>
-						<!-- <nav>
-							<a href="#menu">Menu</a>
-						</nav> -->
 					</header>
 
 
@@ -53,10 +50,12 @@
 								<header class="major">
 									<h3>Introduction</h3>
 								</header>
+								<!-- Write the abstract here -->
 								<p>[Write Here]</p>
 							</div>
 						</section>
 
+						<!-- Write our referenced resources here -->
 						<section id="three">
 							<div class="inner">
 								<header class="major">
@@ -83,7 +82,7 @@
 							</div>
 						</section>
 
-
+						<!-- Write our component here  -->
 						<section id="four">
 							<div class="inner">
 								<header class="major">
@@ -116,53 +115,108 @@
 							</div>
 						</section>
 
+						<!-- Here is our results, probably not empirical results, but the training procedure -->
 						<section id="five">
 							<div class="inner">
 								<header class="major">
 									<h4>Result of our Investigation</h4>
 								</header>
-								<h5>1. New Training Process for GraphRNN</h5>
-								<!-- <div class="image section">
-									<span class="image main"><a href="https://arxiv.org/abs/2111.02842" target="_blank"><img src="images/overall_grabnel.png" alt="" /></a></span>
-									<p>Figure 2: From "Adversarial Attacks on Graph Classification via Bayesian Optimisation"; a visualization of the attack generation procedure.</p>
-								</div> -->
-								<p>[Write Here]</p>
+								<h5>1. New Training Procedure for GraphRNN</h5>
+								<p>
+									Originally, GraphRNN is trained by comparing the generated padded adjacency vector with the sequenced original adjacency matrix using binary cross entropy loss.
+									This isn't ideal for the WGAN training procedure, where the generator needs to be trained by the discriminator's output, which is no longer an adjacency matrix.
+								</p>
+
+								<p>
+									For our new training process for the GraphRNN, we revert the output of node-level and edge-level RNN models to batches of generated adjacency matrices; then we pass these
+									adjacency matrices into the discriminator network, whose output is used in our Wasserstein loss function. We will use this loss to update the node-level and edge-level RNN model parameters.
+								</p>
+
+								<!-- This is prob going to be a discussion of how our three losses are not working -->
 								<h5>2. Observation on the three Losses</h5>
-								<!-- <div class="image section">
+								<p>
+									With our proposed WGAN training regime, we trained the generator, the discriminator, and the inverter, all in one training loop.
+									We recorded the loss of each of the models every epoch.
+								</p>
+								<div class="image section">
 									<span class="image main"><a href="https://arxiv.org/pdf/1710.11342.pdf" target="_blank"><img src="images/pic11.jpg" alt="" /></a></span>
-									<p>Figure 3: From "Generating Natural Adversarial Example"; A visualization of the Wasserstein GAN procedure. </p>
-								</div> -->
-								<p>[Write Here]</p>
+									<p>Figure 6: Graphs for the training loss of the three models. </p>
+								</div>
+								<p>
+									We found that as the discriminator loss improves overtime, the generator loss and inverter loss quickly hits a threshold and cannot
+									improve further beyond this point.
+
+									This can be an indication that the new training regime isn't suitable for GraphRNN training, and the quality of our generated graphs is not good enough
+									support the training of the discriminator and inverter.
+								</p>
 							</div>
 						</section>
 
+						<!-- Here we write about what went wrong, and some ideas to make them right -->
 						<section id="six">
 							<div class="inner">
 								<header class="major">
-									<h4>Challenges and Future Directions</h4>
+									<h4>Challenges</h4>
 								</header>
-								<h5>1. GraphRNN output is inconsistent</h5>
-								<!-- <div class="image section">
-									<span class="image main"><a href="https://arxiv.org/abs/2111.02842" target="_blank"><img src="images/overall_grabnel.png" alt="" /></a></span>
-									<p>Figure 2: From "Adversarial Attacks on Graph Classification via Bayesian Optimisation"; a visualization of the attack generation procedure.</p>
-								</div> -->
-								<p>[Write Here]</p>
-								<h5>2. Lack of networkx integration in PyTorch/PyTorch Geometric</h5>
-								<!-- <div class="image section">
-									<span class="image main"><a href="https://arxiv.org/pdf/1710.11342.pdf" target="_blank"><img src="images/pic11.jpg" alt="" /></a></span>
-									<p>Figure 3: From "Generating Natural Adversarial Example"; A visualization of the Wasserstein GAN procedure. </p>
-								</div> -->
-								<p>[Write Here]</p>
+								<h5>1. Previous work and time constraint</h5>
+								<p>
+									There aren't many research done in generating adversarial examples in latent space for graph classification task,
+									meaning we have to compose our idea from the ground up, which is a huge undertaking. Plus, the time frame for this
+									project is 10 weeks, which is very little time to fully develop this framework and run experiments.
+								</p>
+
+								<h5>2. GraphRNN output during training is difficult to interpret and process by the discriminator </h5>
+								<p>
+									Theoretically, the output of GraphRNN is a graph of arbitrary size. In practice, however, the training implementation output
+									packed version of the original graph adjacency vector in batches. Ideally, we want to extract graph statistics from the graph adjacency
+									matrix and use those extracted statistics for classification in the discriminator. This is not possible with the packed output.
+									Although we are able to reshape the packed output back into the expected shape of a batch of adjacency matrices, the validity of this operation is still unconfirmed.
+								</p>
+
+								<h5>3. Lack of networkx integration in PyTorch/PyTorch Geometric</h5>
+
+								<p>
+									We can't calculate graph statistics between models forward passes, because of the lack of Networkx function support from PyTorch Geometric.
+								</p>
+								<ul>
+									<li>
+										<p>
+										The procedure to extract high-quality graph features (clustering coefficient, for example) is complex, and we have been relying on Networkx functions to do these calculations.
+										This becomes an issue during the training of the GraphRNN because Networkx functions break the gradient propagation map in PyTorch, causing the model parameters to not update. We resort
+										to a simple MLP for the discriminator that takes the adjacency matrix directly, but this model has less predictive power than our original proposed model.
+										</p>
+									</li>
+								</ul>
+
+
+								<header class="major">
+									<h4>Future Plan</h4>
+								</header>
+								<p>If we plan to continue this research project, we want to do the following...</p>
+								<h5>1. Improve implementation of GraphRNN for better training procedure</h5>
+								<p>
+									Due to the lack of time, we didn't investigate the GraphRNN implementation and treated the model as a black box.
+                                    We encountered many issues related to dataloader, model training, and graph generation with the official implementation. As we start to troubleshooting
+                                    the model, we noticed that the training code isn't optimal for WGAN training, because its input and output are sequenced adjacency vectors, instead we want complete adjacency matrices for down stream training and evaluation.
+                                    We want to redesign and reimplement the training code to return graphs' adjacency matrix in one forward pass, and be ready for WGAN-style training.
+								</p>
+								<h5>2. Use graph classification model as our discriminator, instead of a simple MLP</h5>
+								<p>[Write]</p>
 							</div>
 						</section>
 
-						<section id="seven">
+
+
+						<section id="eight">
 							<div class="inner">
 								<header class="major">
 									<h4>Reference</h4>
 								</header>
-
-								<p>[Write Here]</p>
+								<ol>
+									<li>GraphRNN: <a href="https://arxiv.org/abs/1802.08773" target="_blank">Paper</a>, <a target="_blank" href="https://github.com/snap-stanford/GraphRNN">Original Implementation</a></li>
+									<li>Attack on GNN with Bayesian Optimization: <a href="https://arxiv.org/abs/2111.02842" target="_blank">Paper</a>, <a target="_blank" href="https://github.com/xingchenwan/grabnel">Original Implementation</a></li>
+									<li>Wasserstein GAN: <a href="https://arxiv.org/abs/1701.07875" target="_blank">Paper</a>, <a target="_blank" href="https://github.com/martinarjovsky/WassersteinGAN">Original Implementation</a></li>
+								</ol>
 							</div>
 						</section>
 					</div>
