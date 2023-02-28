@@ -89,9 +89,9 @@
 									<h4>Our Proposal</h4>
 								</header>
 								<p>
-									<strong>Discriminator:</strong> <br><br>
-									<strong>Generator:</strong> <br><br>
-									<strong>Inverter:</strong> <br><br>
+									<strong>Discriminator: MLP</strong> <br><br>
+									<strong>Generator: GraphRNN</strong> <br><br>
+									<strong>Inverter: Graph2Vec + MLP</strong> <br><br>
 								</p>
 
 								<header class="style4">
@@ -100,21 +100,40 @@
 										<span class="image main"><a href="https://cs.stanford.edu/people/jure/pubs/graphrnn-icml18.pdf" target="_blank"><img src="images/GraphRNN_Structure.png" alt="" /></a></span>
 										<p>Figure 4: Structure of the GraphRNN model. </p>
 									</div>
-									<p>[Write Here]</p>
+									<p>
+										GraphRNN is an autoregressive graph generation model that uses two GRU recurrent neural networks. One GRU model update the node-level sequence, which decides whether to generate a new node at a given iteration.
+										The second GRU model update the edge-level sequence after the node-level sequence is updated; it will fill in the connection between existing nodes and the next iteration of node.
+									</p>
+									<p>
+										Originally, the model is trained with binary cross entropy loss, comparing the generated edges and the ground truth. We are training the generator in as a WGAN generator, meaning we are training GraphRNN to maximize the discriminator's output for fake samples.
+									</p>
 								</header>
 
 								<header class="style4">
 									<h4>Inverter&Discriminator: Multi-layer Neural Network</h4>
-									<p>[Write Here]</p>
+									<p>
+										The inverter and the discriminator are simple multi-layer perceptron networks. The difference lies in their hyperparameter setup, and that the inverter takes in the embedding of a graph.
+									</p>
+									<p>
+										For the inverter, we decided to use Graph2Vec to generate embedding for the real and the generated graph, and pass that into the inverter for training.
+									</p>
 								</header>
 
 								<header class="style4">
 									<h4>Overall Structure</h4>
 									<div class="image section">
 										<span class="image main"><a href="" target="_blank"><img src="images/Method Illustraion.png" alt="" /></a></span>
-										<p>Figure 5: Structure of our attack generation procedure. </p>
+										<p>Figure 5.1: Structure of our attack generation procedure. </p>
 									</div>
 									<p>[Write Here]</p>
+								</header>
+
+								<header class="style4">
+									<h4>What we have currently</h4>
+									<div class="image section">
+										<span class="image main"><a href="" target="_blank"><img src="images/Method Illustraion2.png" alt="" /></a></span>
+										<p>Figure 5.2: Current structure of our attack generation procedure. </p>
+									</div>
 								</header>
 							</div>
 						</section>
@@ -205,7 +224,15 @@
                                     We want to redesign and reimplement the training code to return graphs' adjacency matrix in one forward pass, and be ready for WGAN-style training.
 								</p>
 								<h5>2. Use graph classification model as our discriminator, instead of a simple MLP</h5>
-								<p>[Write]</p>
+								<p>
+									Currently, the discriminator is a simple MLP that takes in the real/generated adjacency matrix and output a classification result. The discriminator is trained by the negative Wasserstein distance between the generated distribution
+									and the real data distribution.
+								</p>
+								<p>
+									After evaluating the result of the current setup, we think a simple MLP can't take into account specific graph properties, and thus cannot accurately discern between the two distributions.
+									We propose to substitute this MLP with a Graph Attention Machine (GAM) classifier, because GAM can utilize the Weisfeiler-Lehman kernel to capture graph features to discern between the real and the generated distributions.
+									Ideally, this will provide high quality loss for the discriminator training and the generator training.
+								</p>
 							</div>
 						</section>
 
@@ -220,6 +247,7 @@
 									<li>GraphRNN: <a href="https://arxiv.org/abs/1802.08773" target="_blank">Paper</a>, <a target="_blank" href="https://github.com/snap-stanford/GraphRNN">Original Implementation</a></li>
 									<li>Attack on GNN with Bayesian Optimization: <a href="https://arxiv.org/abs/2111.02842" target="_blank">Paper</a>, <a target="_blank" href="https://github.com/xingchenwan/grabnel">Original Implementation</a></li>
 									<li>Wasserstein GAN: <a href="https://arxiv.org/abs/1701.07875" target="_blank">Paper</a>, <a target="_blank" href="https://github.com/martinarjovsky/WassersteinGAN">Original Implementation</a></li>
+									<li>Graph Attention Model: <a href="http://ryanrossi.com/pubs/KDD18-graph-attention-model.pdf">Paper</a>, <a target="_blank" href="https://github.com/benedekrozemberczki/GAM/tree/03e13f01a59dba22c9c789dfa11ce84b614c0be0">Original Implementation</a></li>
 								</ol>
 							</div>
 						</section>
@@ -245,17 +273,24 @@
 									</div>
 								</section>
 							</section>
+							<section class="split">
+								<div>
+									<p> Project GitHub Page</p>
+									<a href="https://github.com/Barry0121/graph-neural-net-benchmark" target="_blank" rel="noopener noreferrer" class="icon brands alt fa-github"><span class="label">Project GitHub Page</span></a>
+								</div>
+							</section>
 						</div>
 					</section>
 
+
 				<!-- Footer -->
-					<footer id="footer">
+					<!-- <footer id="footer">
 						<div class="inner">
 							<ul class="icons">
-								<li><a href="https://github.com/Barry0121/graph-neural-net-benchmark" target="_blank" rel="noopener noreferrer" class="icon brands alt fa-github"><span class="label">Project GitHub Page</span></a></li>
+
 							</ul>
 						</div>
-					</footer>
+					</footer> -->
 
 			</div>
 
