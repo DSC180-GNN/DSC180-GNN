@@ -66,19 +66,19 @@
 									<span class="image main"><a href="https://arxiv.org/abs/2111.02842" target="_blank"><img src="images/overall_grabnel.png" alt="" /></a></span>
 									<p>Figure 2: From "Adversarial Attacks on Graph Classification via Bayesian Optimisation"; a visualization of the attack generation procedure.</p>
 								</div>
-								<p>[Write Here]</p>
+								<p>Generating Attack with Surrogate Model on Graphs is a method used to find the most effective attacks on graphs using machine learning algorithms. The main goal is to learn a surrogate model from the data of the graph, and then use the generated model to simulate attack scenarios and search for the most effective attack strategy. This technique can be especially useful for cyber-security applications, such as identifying potential weaknesses in networks or finding malicious pathways in a graph.</p>
 								<h5>2. Generating Adversarial Example with WGAN</h5>
 								<div class="image section">
 									<span class="image main"><a href="https://arxiv.org/pdf/1710.11342.pdf" target="_blank"><img src="images/Natural_Adversarial_Example.png" alt="" /></a></span>
 									<p>Figure 3: From "Generating Natural Adversarial Example"; A visualization of the Wasserstein GAN procedure. </p>
 								</div>
-								<p>[Write Here]</p>
+								<p>This approach explores a novel method for generating natural adversarial examples, which are inputs that can fool state-of-the-art machine learning models while being imperceptible to human observation. It proposes an approach which combines generative adversarial networks (GANs) with an adversarial perturbation technique to generate both semantically and naturally valid adversarial examples. Specifically, it introduces the Invertor-Generator architecture to train the generative models and uses a Search Algorithm to generate the attack. Inverter is a technique that uses a trained model to transform given data into laten space. Generator is a technique that seeks to directly generate natural adversarial examples from data in the latent space. The critic so-called WGAN is a measurement of difference between the true input and the fake input (generated). </p>
 								<h5>3. Graph2Vec</h5>
 								<div class="image section">
 									<span class="image main"><a href="https://arxiv.org/pdf/1710.11342.pdf" target="_blank"><img src="images/Graph2Vec Illustration.jpeg" alt="" /></a></span>
-									<p>Figure 3: From "Generating Natural Adversarial Example"; A visualization of the Graph2Vec structure. </p>
+									<p>Figure 4: From "Generating Natural Adversarial Example"; A visualization of the Graph2Vec structure. </p>
 								</div>
-								<p>[Write Here]</p>
+								<p>Graph2Vec is a machine learning method developed to embed any graph of arbitrary size into a high-dimensional vector space. It leverages the structural information present in a graph, such as the node degree, shortest path length, etc. to learn a feature vector representation of each node within the graph. By doing so, Graph2Vec can be used to compare the similarity between graphs of different sizes and types. Thus, it provides a meaningful measurement to graph-based data.</p>
 							</div>
 						</section>
 
@@ -125,7 +125,18 @@
 										<span class="image main"><a href="" target="_blank"><img src="images/Method Illustraion.png" alt="" /></a></span>
 										<p>Figure 5.1: Structure of our attack generation procedure. </p>
 									</div>
-									<p>[Write Here]</p>
+									<p>
+										We divide our training algorithm into four parts in total: (1). Discriminator; (2). Generator; (3). Inverter; (4). Search Algorithm.
+									</p>
+									<p>
+										We first train the Discriminator, which corresponds to dark blue from the image. Discriminator takes in two inputs: the original graph in the form of an adjacency matrix and the and the fake graph from Generator. In order to complete the sole training of discriminator, we here turn off the training of the Generator and only leave the training of the Discriminator on. We use Wasserstein Loss to effectively compare the difference of the two graph.
+									</p>
+									<p>
+										We then train the Generator, which corresponds to the dark green from the image. The training of the Generator is rather straightforward. We first sample noises from a normal distribution and pass it into the GraphRNN to generate the fake graph. Without loss of generality, we use Discriminator as our critic during the training of Generator.
+									</p>
+									<p>
+										After that, we train the Inverter, which corresponds to the red blocks from the image. The logistics of trianing Inverter is not much different from training Generator, except that we are working backwards now. We first pass a graph input into Graph2Vec to generate some embeddings for the purpose of size standardization. Now the vectorized data should have a uniform shape, as against a non-constant shape before Graph2Vec. We then pass this vectorized graph into Inverter and subsequently Generator to generate a reconstructed graph. At the same time, we also generate noise from Guassian Distribution and pass this noise into the Graph2vec-Inverter pipeline to similarly generate a reconstructed noise. Finally, we compare the true graph, reconstructed graph, true noise, and reconstructed noise to update the weights of Inverter.
+									</p>
 								</header>
 
 								<header class="style4">
