@@ -127,13 +127,18 @@
 										We divide our training algorithm into four parts in total: (1). Discriminator; (2). Generator; (3). Inverter; (4). Search Algorithm.
 									</p>
 									<p>
-										We first train the Discriminator, which corresponds to dark blue from the image. Discriminator takes in two inputs: the original graph in the form of an adjacency matrix and the and the fake graph from Generator. In order to complete the sole training of discriminator, we here turn off the training of the Generator and only leave the training of the Discriminator on. We use Wasserstein Loss to effectively compare the difference of the two graph.
+										We first train the Discriminator, which corresponds to dark blue from the image. Discriminator takes in two inputs: the original graph in the form of an adjacency matrix and the and the fake graph from Generator. In order to complete the sole training of discriminator, 
+										we here turn off the training of Generator and only leave the training of the Discriminator on. We use Wasserstein Loss to effectively compare the difference of the two graph.
 									</p>
 									<p>
-										We then train the Generator, which corresponds to the dark green from the image. The training of the Generator is rather straightforward. We first sample noises from a normal distribution and pass it into the GraphRNN to generate the fake graph. Without loss of generality, we use Discriminator as our critic during the training of Generator.
+										We then train the Generator, which corresponds to the dark green from the image. The training of the Generator is rather straightforward. We first sample noises from a normal distribution and pass it into the GraphRNN to generate the fake graph. Without loss of generality,
+										we use Discriminator as our critic during the training of Generator.
 									</p>
 									<p>
-										After that, we train the Inverter, which corresponds to the red blocks from the image. The logistics of trianing Inverter is not much different from training Generator, except that we are working backwards now. We first pass a graph input into Graph2Vec to generate some embeddings for the purpose of size standardization. Now the vectorized data should have a uniform shape, as against a non-constant shape before Graph2Vec. We then pass this vectorized graph into Inverter and subsequently Generator to generate a reconstructed graph. At the same time, we also generate noise from Guassian Distribution and pass this noise into the Graph2vec-Inverter pipeline to similarly generate a reconstructed noise. Finally, we compare the true graph, reconstructed graph, true noise, and reconstructed noise to update the weights of Inverter.
+										After that, we train the Inverter, which corresponds to the red blocks from the image. The logistics of trianing Inverter is not much different from training Generator, except that we are using a different architecture and dealing with data of different sizes. We first 
+										pass a graph input into Graph2Vec (or GAM) to generate some embeddings for the purpose of graph standardization. Before we pass graphs (as in the form of an adjacency matrix), those adj matrices have various sizes, which make the training of MLP harder. Hence, we 
+										transform those adj matrices into an embedding representation (vector form) to unify their sizes. Now the vectorized data should have a uniform shape, as against a non-constant shape before Graph2Vec/GAM. We then pass this vectorized graph into the MLP and subsequently 
+										Generator to generate a reconstructed graph. At the same time, we also generate noise from Guassian Distribution and pass this noise into the Graph2vec-MLP pipeline similarly to generate a reconstructed noise. Finally, we compare the true graph, reconstructed graph, true noise, and reconstructed noise to update the weights of Inverter.
 									</p>
 								</header>
 
