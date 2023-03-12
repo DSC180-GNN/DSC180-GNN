@@ -91,7 +91,7 @@
 								<p>
 									<strong>Discriminator: MLP</strong> <br><br>
 									<strong>Generator: GraphRNN</strong> <br><br>
-									<strong>Inverter: Graph2Vec + MLP</strong> <br><br>
+									<strong>Inverter: Graph2Vec/GAM + MLP</strong> <br><br>
 								</p>
 
 								<header class="style4">
@@ -111,9 +111,9 @@
 									<h4>Inverter&Discriminator: Multi-layer Neural Network</h4>
 									<p>
 										The inverter and the discriminator are simple multi-layer perceptron networks. The difference lies in their hyperparameter setup, and that the inverter takes in the embedding of a graph.
-									</p>
-									<p>
-										For the inverter, we decided to use Graph2Vec to generate embedding for the real and the generated graph, and pass that into the inverter for training.
+										For the inverter, we decided to first try Graph2Vec to generate embedding for the real and the generated graph, and pass that into the inverter for training.
+										However, we later found that the current Graph2Vec implementation from the Karate Club is not compatible with Torch's gradient computation. Hence, we decided to switch
+										to GAM (Graph Attention Model) as an embedding technique before we pass data to Inverter.
 									</p>
 								</header>
 
