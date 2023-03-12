@@ -118,7 +118,7 @@
 								</header>
 
 								<header class="style4">
-									<h4>Overall Structure</h4>
+									<h4>Overall Planned Structure</h4>
 									<div class="image section">
 										<span class="image main"><a href="" target="_blank"><img src="images/Method Illustration.png" alt="" /></a></span>
 										<p>Figure 5.1: Structure of our attack generation procedure. </p>
@@ -138,16 +138,20 @@
 										After that, we train the Inverter, which corresponds to the red blocks from the image. The logistics of trianing Inverter is not much different from training Generator, except that we are using a different architecture and dealing with data of different sizes. We first 
 										pass a graph input into Graph2Vec (or GAM) to generate some embeddings for the purpose of graph standardization. Before we pass graphs (as in the form of an adjacency matrix), those adj matrices have various sizes, which make the training of MLP harder. Hence, we 
 										transform those adj matrices into an embedding representation (vector form) to unify their sizes. Now the vectorized data should have a uniform shape, as against a non-constant shape before Graph2Vec/GAM. We then pass this vectorized graph into the MLP and subsequently 
-										Generator to generate a reconstructed graph. At the same time, we also generate noise from Guassian Distribution and pass this noise into the Graph2vec-MLP pipeline similarly to generate a reconstructed noise. Finally, we compare the true graph, reconstructed graph, true noise, and reconstructed noise to update the weights of Inverter.
+										Generator to generate a reconstructed graph. At the same time, we also generate noise from Guassian Distribution and pass this noise into the Graph2vec-MLP pipeline similarly to generate a reconstructed noise. Finally, we compare the true graph, reconstructed graph, 
+										true noise, and reconstructed noise to update the weights of Inverter.
 									</p>
 								</header>
 
 								<header class="style4">
-									<h4>What we have currently</h4>
+									<h4>What We Have Currently</h4>
 									<div class="image section">
 										<span class="image main"><a href="" target="_blank"><img src="images/Method Illustraion2.png" alt="" /></a></span>
 										<p>Figure 5.2: Current structure of our attack generation procedure. </p>
 									</div>
+									<p>
+										We can only get to Discriminator and Generator training due to time constraint.
+									</p>
 								</header>
 							</div>
 						</section>
@@ -213,18 +217,10 @@
 								<h5>3. Lack of networkx integration in PyTorch/PyTorch Geometric</h5>
 
 								<p>
-									We can't calculate graph statistics between models forward passes, because of the lack of Networkx function support from PyTorch Geometric.
-								</p>
-								<ul>
-									<li>
-										<p>
-										The procedure to extract high-quality graph features (clustering coefficient, for example) is complex, and we have been relying on Networkx functions to do these calculations.
+									The procedure to extract high-quality graph features (clustering coefficient, for example) is complex, and we have been relying on Networkx functions to do these calculations.
 										This becomes an issue during the training of the GraphRNN because Networkx functions break the gradient propagation map in PyTorch, causing the model parameters to not update. We resort
 										to a simple MLP for the discriminator that takes the adjacency matrix directly, but this model has less predictive power than our original proposed model.
-										</p>
-									</li>
-								</ul>
-
+								</p>
 
 								<header class="major">
 									<h4>Future Plan</h4>
