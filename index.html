@@ -103,8 +103,6 @@
 									<p>
 										GraphRNN is an autoregressive graph generation model that uses two GRU recurrent neural networks. One GRU model update the node-level sequence, which decides whether to generate a new node at a given iteration.
 										The second GRU model update the edge-level sequence after the node-level sequence is updated; it will fill in the connection between existing nodes and the next iteration of node.
-									</p>
-									<p>
 										Originally, the model is trained with binary cross entropy loss, comparing the generated edges and the ground truth. We are training the generator in as a WGAN generator, meaning we are training GraphRNN to maximize the discriminator's output for fake samples.
 									</p>
 								</header>
