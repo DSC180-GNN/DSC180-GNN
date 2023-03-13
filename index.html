@@ -51,7 +51,16 @@
 									<h3>Introduction</h3>
 								</header>
 								<!-- Write the abstract here -->
-								<p>Graph neural networks (GNNs) have seen tremendous success in recent years, leading to their widespread adoption in a variety of applications. However, recent studies have demonstrated that GNNs can be vulnerable to adversarial attacks. Adversarial attacks allow adversaries to manipulate GNNs by introducing small, seemingly harmless perturbations to the input data, which can lead to misclassification or unexpected behavior from the GNN. Such attacks can have drastic impacts on security and privacy, particularly in safety-critical or privacy-sensitive applications. Consequently, research into adversarial attacks on GNNs is becoming increasingly important, and we thus propose an adversarial attack framework (called Adversarial WGraphRNN) for Graph Classification problems. Specifically, our framework generates more natural attacks on the latent space of an arbitrarily benign graph. Furthermore, instead of manually generating attacks, the framework also employs deep learning techniques to automate the attack process. In this project, we identify vulnerabilities in current graph classifiers and provide motivation for researchers to discover more robust models. </p>
+								<p>
+									Graph neural networks (GNNs) have seen tremendous success in recent years, leading to their widespread adoption
+									in a variety of applications. However, recent studies have demonstrated that GNNs can be vulnerable to adversarial
+									attacks. Adversarial attacks allow adversaries to manipulate GNNs by introducing small, seemingly harmless perturbations
+									to the input data, which can lead to misclassification or unexpected behavior from the GNN. Such attacks can have drastic
+									impacts on security and privacy, particularly in safety-critical or privacy-sensitive applications.
+									Consequently, research into adversarial attacks on GNNs is becoming increasingly important,
+									and we thus propose an adversarial attack framework that discovers continuous latent representations
+									of graphs to which adversarial modifications are added, instead of modifying a benign graph itself.
+								</p>
 							</div>
 						</section>
 
@@ -72,13 +81,23 @@
 									<span class="image main"><a href="https://arxiv.org/pdf/1710.11342.pdf" target="_blank"><img src="images/Natural_Adversarial_Example.png" alt="" /></a></span>
 									<p>Figure 3: From "Generating Natural Adversarial Example"; A visualization of the Wasserstein GAN procedure. </p>
 								</div>
-								<p>This approach explores a novel method for generating natural adversarial examples, which are inputs that can fool state-of-the-art machine learning models while being imperceptible to human observation. It proposes an approach which combines generative adversarial networks (GANs) with an adversarial perturbation technique to generate both semantically and naturally valid adversarial examples. Specifically, it introduces the Invertor-Generator architecture to train the generative models and uses a Search Algorithm to generate the attack. Inverter is a technique that uses a trained model to transform given data into laten space. Generator is a technique that seeks to directly generate natural adversarial examples from data in the latent space. The critic so-called WGAN is a measurement of difference between the true input and the fake input (generated). </p>
+								<p>
+									This approach is a novel method for generating natural adversarial examples,
+									which are inputs that can fool state-of-the-art machine learning models
+									while being imperceptible to human observation.
+									Its architecture is comprised of an inverter, which maps from the data space to the latent space,
+									a generator, which is trained to be part of a Wasserstein GAN and maps from the latent space to the data space,
+									and a search algorithm, which explores the latent space for representations of adversarial examples.
+								</p>
 								<h5>3. Graph2Vec</h5>
 								<div class="image section">
 									<span class="image main"><a href="https://arxiv.org/pdf/1710.11342.pdf" target="_blank"><img src="images/Graph2Vec Illustration.jpeg" alt="" /></a></span>
 									<p>Figure 4: From "Generating Natural Adversarial Example"; A visualization of the Graph2Vec structure. </p>
 								</div>
-								<p>Graph2Vec is a machine learning method developed to embed any graph of arbitrary size into a high-dimensional vector space. It leverages the structural information present in a graph, such as the node degree, shortest path length, etc. to learn a feature vector representation of each node within the graph. By doing so, Graph2Vec can be used to compare the similarity between graphs of different sizes and types. Thus, it provides a meaningful measurement to graph-based data.</p>
+								<p>
+									Graph2Vec is a machine learning method that embeds a graph of arbitrary size into Euclidean space.
+									We intend to first pass graphs to Graph2Vec and then pass the resulting vectors to the inverter.
+								</p>
 							</div>
 						</section>
 
@@ -101,19 +120,22 @@
 										<p>Figure 4: Structure of the GraphRNN model. </p>
 									</div>
 									<p>
-										GraphRNN is an autoregressive graph generation model that uses two GRU recurrent neural networks. One GRU model update the node-level sequence, which decides whether to generate a new node at a given iteration.
-										The second GRU model update the edge-level sequence after the node-level sequence is updated; it will fill in the connection between existing nodes and the next iteration of node.
-										Originally, the model is trained with binary cross entropy loss, comparing the generated edges and the ground truth. We are training the generator in as a WGAN generator, meaning we are training GraphRNN to maximize the discriminator's output for fake samples.
+										GraphRNN is an autoregressive graph generation model that uses two GRU recurrent neural networks.
+										The first GRU model updates a hidden state, which is a representation of the graph that has been generated so far.
+										The second GRU model takes the hidden state of the first GRU and uses it to generate adjacency vectors.
+										Originally, the model was trained with binary cross entropy loss, comparing the generated edges and the ground truth.
+										We propose to train the GraphRNN to minimize the Wasserstein distance between the data distribution and the distribution of GraphRNN.
 									</p>
 								</header>
 
 								<header class="style4">
-									<h4>Inverter&Discriminator: Multi-layer Neural Network</h4>
+									<h4>Inverter & Discriminator: Multi-layer Perceptrons</h4>
 									<p>
-										The inverter and the discriminator are simple multi-layer perceptron networks. The difference lies in their hyperparameter setup, and that the inverter takes in the embedding of a graph.
-										For the inverter, we decided to first try Graph2Vec to generate embedding for the real and the generated graph, and pass that into the inverter for training.
-										However, we later found that the current Graph2Vec implementation from the Karate Club is not compatible with Torch's gradient computation. Hence, we decided to switch
-										to GAM (Graph Attention Model) as an embedding technique before we pass data to Inverter.
+										The inverter and the discriminator are simple multi-layer perceptrons.
+										For the inverter, we decided to first try to train Graph2Vec to generate embeddings, which would be passed to the inverter.
+										However, we later found that the Graph2Vec implementation from the package “Karate Club” is not compatible with Torch’s gradient computation.
+										Hence, we decided to switch to GAM (Graph Attention Model) as an embedding technique.
+										However, GAM did not work either.
 									</p>
 								</header>
 
@@ -127,7 +149,7 @@
 										We divide our training algorithm into four parts in total: (1). Discriminator; (2). Generator; (3). Inverter; (4). Search Algorithm.
 									</p>
 									<p>
-										We first train the Discriminator, which corresponds to dark blue from the image. Discriminator takes in two inputs: the original graph in the form of an adjacency matrix and the and the fake graph from Generator. In order to complete the sole training of discriminator, 
+										We first train the Discriminator, which corresponds to dark blue from the image. Discriminator takes in two inputs: the original graph in the form of an adjacency matrix and the and the fake graph from Generator. In order to complete the sole training of discriminator,
 										we here turn off the training of Generator and only leave the training of the Discriminator on. We use Wasserstein Loss to effectively compare the difference of the two graph.
 									</p>
 									<p>
@@ -135,10 +157,10 @@
 										we use Discriminator as our critic during the training of Generator.
 									</p>
 									<p>
-										After that, we train the Inverter, which corresponds to the red blocks from the image. The logistics of trianing Inverter is not much different from training Generator, except that we are using a different architecture and dealing with data of different sizes. We first 
-										pass a graph input into Graph2Vec (or GAM) to generate some embeddings for the purpose of graph standardization. Before we pass graphs (as in the form of an adjacency matrix), those adj matrices have various sizes, which make the training of MLP harder. Hence, we 
-										transform those adj matrices into an embedding representation (vector form) to unify their sizes. Now the vectorized data should have a uniform shape, as against a non-constant shape before Graph2Vec/GAM. We then pass this vectorized graph into the MLP and subsequently 
-										Generator to generate a reconstructed graph. At the same time, we also generate noise from Guassian Distribution and pass this noise into the Graph2vec-MLP pipeline similarly to generate a reconstructed noise. Finally, we compare the true graph, reconstructed graph, 
+										After that, we train the Inverter, which corresponds to the red blocks from the image. The logistics of trianing Inverter is not much different from training Generator, except that we are using a different architecture and dealing with data of different sizes. We first
+										pass a graph input into Graph2Vec (or GAM) to generate some embeddings for the purpose of graph standardization. Before we pass graphs (as in the form of an adjacency matrix), those adj matrices have various sizes, which make the training of MLP harder. Hence, we
+										transform those adj matrices into an embedding representation (vector form) to unify their sizes. Now the vectorized data should have a uniform shape, as against a non-constant shape before Graph2Vec/GAM. We then pass this vectorized graph into the MLP and subsequently
+										Generator to generate a reconstructed graph. At the same time, we also generate noise from Guassian Distribution and pass this noise into the Graph2vec-MLP pipeline similarly to generate a reconstructed noise. Finally, we compare the true graph, reconstructed graph,
 										true noise, and reconstructed noise to update the weights of Inverter.
 									</p>
 								</header>
